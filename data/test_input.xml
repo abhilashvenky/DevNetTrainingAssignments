@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <ACCTNUM1 extra="fun">
+    <paid>0</paid>
+    <due>1</due>
+  </ACCTNUM1>
+  <ACCTNUM2>
+    <paid>2</paid>
+    <due>3</due>
+  </ACCTNUM2>
+</root>

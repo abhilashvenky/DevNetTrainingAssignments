@@ -1,0 +1,10 @@
+{
+    "ACCT<NUM1>": {
+        "paid": 0,
+        "due": 1
+    },
+    "ACCT<NUM2>": {
+        "paid": 2,
+        "due": 3
+    }
+}
