@@ -2,21 +2,31 @@ import json
 import xml.etree.ElementTree as ET 
 import yaml
 import os
+import requests
 
 # Create a parser class that can parse any input file (json/xml/yaml)
 class Parser():
 
-    def __init__(self, filepath):
+    def __init__(self, parse_request):
         # Class variable initializations
-        self.filepath = filepath
         self.parsed_data = None
+        self.filepath = None
+        self.api_end_point = None
+        self.api_key = None
 
-        # Calling specific methods within class as per file extension
-        if '.json' in filepath:
+        # Local file path is given, directly proceed to parsing
+        if 'filepath' in parse_request.keys():
+            self.filepath = parse_request['filepath']
+        # Remote API is given, pull file first and then parse
+        else:
+            self.request_api(parse_request['api_end_point'], parse_request['auth_type'], parse_request['auth_key'], parse_request['data'])
+
+        # Calling specific methods within class as per file extension for parsing
+        if '.json' in self.filepath:
             self.parse_json()
-        elif '.xml' in filepath:
+        elif '.xml' in self.filepath:
             self.parse_xml()
-        elif '.yml' in filepath:
+        elif '.yml' in self.filepath:
             self.parse_yml()
 
     # Method to parse JSON file
@@ -70,18 +80,38 @@ class Parser():
         # Save the parsed yaml dict
         self.parsed_data = data
 
+    # Method to pull parsable file from a given API
+    def request_api(self, api_end_point, auth_type, auth_key, data):
+        # Use the requests module to query the given API
+        response = requests.request("GET", api_end_point, headers={auth_type: auth_key}, data = data)
+
+        # Dump the reponse as JSON to data file store using api-end-point as file name
+        json.dump(response.json(), open('../data/' + api_end_point.split('/')[-1] + '.json', 'w'))
+
+        # Save the filepath for further parsing
+        self.filepath = '../data/' + api_end_point.split('/')[-1] + '.json'
+
+    # Getter function for Parser objects
     def get_parsed_data(self):
-        # Getter function for Parser objects
         return self.parsed_data
 
 # Testing the parser class
 if __name__ =='__main__':
     # Iterating through all files in data directory
     for filename in os.listdir('../data/'):
+
+        # Parse DB objects only
         if 'db' in filename:
-            parser = Parser('../data/' + filename)
+
+            # Create a parse request with filepath
+            parse_request = {'filepath' : '../data/' + filename}
+
+            # Create Parser object for parsing the request and print the parsed dictionary
+            parser = Parser(parse_request)
             parsed_data = parser.get_parsed_data()
             print('Parsed dictionary : ', parsed_data)
+
+            # Format and print the parsed data
             print('\nAccount Details : ')
             print('-------------------\n')
             for account in parsed_data:
