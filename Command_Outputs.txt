@@ -1,0 +1,61 @@
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker build -t parser .
+Sending build context to Docker daemon  1.834MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> 005d2078bdfa
+Step 2/16 : RUN apt-get update
+
+<OUTPUT OMITTED>
+
+
+
+
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker run -p 8080:80 parser
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+
+
+
+
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+ NAMES
+55f86674aa97        parser              "/bin/sh -c '/usr/sb…"   8 minutes ago       Up 8 minutes        0.0.0.0:8080->80/tcp  
+ amazing_khayyam
+ 
+ 
+ 
+ 
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker stop 55f86674aa97
+55f86674aa97
+
+
+
+
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker-compose up
+Creating network "devnettrainingassignments_default" with the default driver
+Building python_cgi
+Step 1/16 : FROM ubuntu:16.04
+ ---> 005d2078bdfa
+Step 2/16 : RUN apt-get update
+..
+<OUTPUT OMITTED>
+..
+Successfully built 82a1cb739d40
+Successfully tagged composed_python_cgi:latest
+WARNING: Image for service python_cgi was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating devnettrainingassignments_copy_python_cgi_1 ... done
+Creating python_cgi_container                        ... done
+Attaching to python_cgi_container, devnettrainingassignments_copy_python_cgi_1
+python_cgi_container | AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.2. Set the 'ServerName' directive globally to suppress this message
+copy_python_cgi_1  | AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
+
+
+
+
+C:\Users\abhilv\Documents\DevNet\DevNetTrainingAssignments>docker-compose down
+Removing devnettrainingassignments_copy_python_cgi_1 ... done
+Removing python_cgi_container                        ... done
+Removing network devnettrainingassignments_default
+
+
+
+

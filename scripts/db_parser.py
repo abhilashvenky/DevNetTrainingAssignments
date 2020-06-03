@@ -1,9 +1,17 @@
+#!/usr/bin/python3
+print("Content-Type:text/html")
+print("")
+
+import cgi,cgitb
+cgitb.enable() # Enable debugging
+print("<h1>Below is the execution output of the script</h1>")
+print("------------------------------------<br>")
+
 import json
 import xml.etree.ElementTree as ET 
 import yaml
 import os
 import requests
-
 # Create a parser class that can parse any input file (json/xml/yaml)
 class Parser():
 
@@ -118,3 +126,23 @@ if __name__ =='__main__':
                 print('ACCT NUMBER :', account[4:])
                 print('Paid : ', parsed_data[account]['paid'])
                 print('Due : ', parsed_data[account]['due'],"\n")
+
+    parse_request = {
+    'api_end_point' : 'https://sandboxdnac2.cisco.com/dna/intent/api/v1/network-device', 
+    'auth_type' : 'x-auth-token',
+    'auth_key' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1ZWNlNTc5ODc1MTYxMjAwY2M1NzA2M2QiLCJhdXRoU291cmNlIjoiaW50ZXJuYWwiLCJ0ZW5hbnROYW1lIjoiVE5UMCIsInJvbGVzIjpbIjVlNWE0MzI1NzUxNjEyMDBjYzRhYzk1ZSJdLCJ0ZW5hbnRJZCI6IjVlNWE0MzI1NzUxNjEyMDBjYzRhYzk1YyIsImV4cCI6MTU5MTIwNzY2NiwiaWF0IjoxNTkxMjA0MDY2LCJqdGkiOiI1NmE5ZTA0Ny03NjNhLTQ5MzYtYWUwOS05OTllZDA5YzQyZjUiLCJ1c2VybmFtZSI6ImRuYWNkZXYifQ.YCbGN_KlGd9mMV-wr99K-0wr6sA_g2SRq534STzRFH3-nl9t3CvnBNzI5iZEF7_1BVBi9FOa8O8dJNOl26pipDpHPJZh7GgnXXuokq5wn3EKbT5OTz5N0rxJ1S8Ga_78v4dEhvYU8d-_b739Jof8A_R7soY12tfCiujFNqt4DmOQAefNUZqWEonG60ZPTS3MKstA2wMn1mdBWG5aUA77M0EvFFTRLdniKuz3lQ7r_pZPdr7o0rMibycStJBg0HV8cIgwhNRBO7DcScPf21ovzeeuzxGezIZcd74qVafxo8VgBSzpfojD7coqg-iZajRKIurNmDV76rG1ydi23Nfy4A',
+    'data' : {}
+    }
+
+    # Use the class written in the db_parser script to parse the JSON
+    parser = Parser(parse_request)
+    parsed_data = parser.get_parsed_data()
+
+    # Iterate through the parsed JSON.
+    for device in parsed_data['response']:
+        # Print Device ID, type, family, softwareType, managementIpAddress
+        print('Device ID :', device['id'])
+        print('Device Type :', device['type'])
+        print('Device Family :', device['family'])
+        print('Software Type :', device['softwareType'])
+        print('Management IP Address :', device['managementIpAddress'],'\n')
